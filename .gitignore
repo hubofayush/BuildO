@@ -1,0 +1,5 @@
+# Ignore the QuickAI-assets directory
+QuickAI-assets/
+
+# Ignore the todos.txt file
+todos.txt
