@@ -51,7 +51,7 @@ const Testimonial = () => {
 
   return (
     <>
-      <h1 className="text-center text-4xl font-bold text-gray-900">
+      <h1 className="text-center text-4xl font-bold text-gray-900 mt-20">
         Testimonials
       </h1>
       <p className="text-center text-gray-500 mt-1">
