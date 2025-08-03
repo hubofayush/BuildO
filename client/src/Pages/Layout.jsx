@@ -6,7 +6,7 @@ import Sidebar from "../Components/Sidebar";
 import { useUser, SignIn } from "@clerk/clerk-react";
 
 const Layout = () => {
-  const [sidebar, setSetsidebar] = useState(false);
+  const [sidebar, setSidebar] = useState(false);
   const navigate = useNavigate();
   const { user } = useUser();
 
@@ -21,18 +21,18 @@ const Layout = () => {
         />
         {sidebar ? (
           <X
-            onClick={() => setSetsidebar((prev) => !prev)}
+            onClick={() => setSidebar(false)}
             className="w-6 h-6 text-gray-600 sm:hidden"
           />
         ) : (
           <Menu
-            onClick={() => setSetsidebar((prev) => !prev)}
+            onClick={() => setSidebar(true)}
             className="w-6 h-6 text-gray-600 sm:hidden"
           />
         )}
       </nav>
       <div className="flex flex-1 h-[calc(100vh-64px)] w-full">
-        <Sidebar sidebar={sidebar} setSidebar={setSetsidebar} />
+        <Sidebar sidebar={sidebar} setSidebar={setSidebar} />
         <div className="flex-1 bg-[#F4F7Fb]">
           <Outlet />
         </div>
