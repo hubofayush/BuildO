@@ -66,6 +66,8 @@ const BlogTitles = () => {
           Generate Title
         </button>
       </form>
+
+      {/* Right column */}
       <div className="bg-white w-full max-w-lg flex p-4  min-h-96 flex-col border border-gray-200 rounded-lg shadow-lg">
         <div className="w-full flex items-center gap-3">
           <Hash className="w-5 text-[#d937e4]" />
