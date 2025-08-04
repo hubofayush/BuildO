@@ -14,10 +14,10 @@ const Layout = () => {
     <div className="flex flex-col justify-start items-start h-screen">
       <nav className="w-full min-h-14 px-8 flex  items-center justify-between border-b border-gray-200">
         <img
-          src={assets.logo}
+          src={assets.newlogo}
           alt="logo"
           onClick={() => navigate("/")}
-          className="cursor-pointer w-32 sm:w-44"
+          className="cursor-pointer max-w-30 min-w-30 sm:w-44"
         />
         {sidebar ? (
           <X
