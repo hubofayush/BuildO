@@ -89,7 +89,7 @@ const GenerateImages = () => {
         <div className="flex flex-1 items-center justify-center">
           <div className="flex gap-3 items-center flex-col justify-center text-sm text-gray-400">
             <Image className="w-9 h-9 " />
-            <p>
+            <p className="text-center">
               Describe your image and click "Generate Image" to generate Image
             </p>
           </div>

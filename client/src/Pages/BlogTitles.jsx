@@ -76,7 +76,7 @@ const BlogTitles = () => {
         <div className="flex  flex-1 items-center justify-center">
           <div className="flex flex-col items-center text-sm text-gray-400 gap-5">
             <Hash className="w-9 h-9" />
-            <p>
+            <p className="text-center">
               Enter topic and click "Generate Article" to Generate Article Title
             </p>
           </div>
