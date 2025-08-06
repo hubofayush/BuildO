@@ -6,43 +6,43 @@ import Sidebar from "../Components/Sidebar";
 import { useUser, SignIn } from "@clerk/clerk-react";
 
 const Layout = () => {
-  const [sidebar, setSidebar] = useState(false);
-  const navigate = useNavigate();
-  const { user } = useUser();
+    const [sidebar, setSidebar] = useState(false);
+    const navigate = useNavigate();
+    const { user } = useUser();
 
-  return user ? (
-    <div className="flex flex-col justify-start items-start h-screen">
-      <nav className="w-full min-h-14 px-8 flex  items-center justify-between border-b border-gray-200">
-        <img
-          src={assets.newlogo}
-          alt="logo"
-          onClick={() => navigate("/")}
-          className="cursor-pointer max-w-30 min-w-30 sm:w-44"
-        />
-        {sidebar ? (
-          <X
-            onClick={() => setSidebar(false)}
-            className="w-6 h-6 text-gray-600 sm:hidden"
-          />
-        ) : (
-          <Menu
-            onClick={() => setSidebar(true)}
-            className="w-6 h-6 text-gray-600 sm:hidden"
-          />
-        )}
-      </nav>
-      <div className="flex flex-1 h-[calc(100vh-64px)] w-full">
-        <Sidebar sidebar={sidebar} setSidebar={setSidebar} />
-        <div className="flex-1 bg-[#F4F7Fb]">
-          <Outlet />
+    return user ? (
+        <div className="flex flex-col justify-start items-start h-screen">
+            <nav className="w-full min-h-14 px-8 flex  items-center justify-between border-b border-gray-200">
+                <img
+                    src={assets.newlogo}
+                    alt="logo"
+                    onClick={() => navigate("/")}
+                    className="cursor-pointer w-30 sm:w-44"
+                />
+                {sidebar ? (
+                    <X
+                        onClick={() => setSidebar(false)}
+                        className="w-6 h-6 text-gray-600 sm:hidden"
+                    />
+                ) : (
+                    <Menu
+                        onClick={() => setSidebar(true)}
+                        className="w-6 h-6 text-gray-600 sm:hidden"
+                    />
+                )}
+            </nav>
+            <div className="flex flex-1 h-[calc(100vh-64px)] w-full">
+                <Sidebar sidebar={sidebar} setSidebar={setSidebar} />
+                <div className="flex-1 bg-[#F4F7Fb]">
+                    <Outlet />
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  ) : (
-    <div className="flex items-center justify-center h-screen">
-      <SignIn />
-    </div>
-  );
+    ) : (
+        <div className="flex items-center justify-center h-screen">
+            <SignIn />
+        </div>
+    );
 };
 
 export default Layout;
