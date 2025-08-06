@@ -4,6 +4,9 @@ import { SQL } from "../db/index.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { clerkClient } from "@clerk/express";
+import axios from "axios";
+
+import { v2 as Cloudinary } from "cloudinary";
 
 const AI = new OpenAI({
     apiKey: process.env.GEMINI_API_KEY,
@@ -153,4 +156,71 @@ const dummyController = asyncHandler(async (req, res) => {
             .json(new ApiResponse(statusCode, [], message));
     }
 });
-export { generateArticle, generateBlogTitle, dummyController };
+
+const generateImage = asyncHandler(async (req, res) => {
+    try {
+        const { userId, has } = req.auth();
+        const { prompt, publish } = req.body;
+        const plan = req.plan;
+
+        if (plan !== "premium") {
+            throw new ApiError(403, "Subscribe to Generate Image");
+        }
+
+        if (!prompt || prompt === "") {
+            throw new ApiError(400, "promt cannot be empty");
+        }
+
+        // clipdorp image generation //
+        const formData = new FormData();
+        formData.append("prompt", prompt);
+
+        const { data } = await axios.post(
+            "https://clipdrop-api.co/text-to-image/v1",
+            formData,
+            {
+                headers: {
+                    "x-api-key": process.env.CLIPDROP_API_KEY,
+                },
+                responseType: "arraybuffer",
+            }
+        );
+
+        const base64Image = `data:image/png;base64,${Buffer.from(
+            data,
+            "binary"
+        ).toString("base64")}`;
+
+        const uploadImage = await Cloudinary.uploader.upload(base64Image);
+        if (!uploadImage) {
+            throw new ApiError(
+                400,
+                "error while uploading image on cloudinary"
+            );
+        }
+
+        const dbQuery = await SQL.query(
+            `INSERT INTO creations(user_id, prompt, content, type, publish) VALUES($1, $2, $3, $4, $5)`,
+            [userId, prompt, uploadImage.secure_url, "image", publish ?? false]
+        );
+
+        if (!dbQuery) {
+            throw new ApiError(400, "DB query not worked");
+        }
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(200, uploadImage.secure_url, "Image Generated")
+            );
+        // end of clipdorp image generation //
+    } catch (error) {
+        let message = error.message || "error while genrating blog title";
+        let statusCode = error.statusCode || 500;
+        return res
+            .status(statusCode)
+            .json(new ApiResponse(statusCode, [], message));
+    }
+});
+
+export { generateArticle, generateBlogTitle, generateImage, dummyController };
