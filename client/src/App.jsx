@@ -9,8 +9,16 @@ import GenerateImages from "./Pages/GenerateImages";
 import ReamoveObject from "./Pages/ReamoveObject";
 import RemoveBackgorund from "./Pages/RemoveBackgorund";
 import ReviewResume from "./Pages/ReviewResume";
+import { useAuth } from "@clerk/clerk-react";
+import { useEffect } from "react";
 
 const App = () => {
+  const { getToken } = useAuth();
+
+  useEffect(() => {
+    getToken().then((token) => console.log(token));
+  }, []);
+
   return (
     <>
       <Routes>
