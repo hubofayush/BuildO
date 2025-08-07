@@ -12,3 +12,5 @@ router.route("/get-user-creations").get(clerkAuth, getCreations);
 router.route("/get-publish-creations").get(clerkAuth, getPublishCreations);
 
 router.route("/toggle-like-creation").post(clerkAuth, toggleLike);
+
+export default router;

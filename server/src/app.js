@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import cookieparser from "cookie-parser";
 import { clerkMiddleware, requireAuth } from "@clerk/express";
-import aiRouter from "./routes/ai.routes.js";
 import { connectCloudinary } from "./utils/cloudinary.js";
-
+import aiRouter from "./routes/ai.routes.js";
+import userRouter from "./routes/user.routes.js";
 const app = express();
 
 await connectCloudinary();
@@ -28,5 +28,6 @@ app.get("/ai", (req, res) => {
 });
 app.use(requireAuth()); // Require authentication for all subsequent routes
 app.use("/api/v1/ai", aiRouter);
+app.use("/api/v1/user", userRouter);
 
 export { app };
