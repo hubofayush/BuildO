@@ -44,12 +44,15 @@ const WriteArticle = () => {
 
             if (data.success) {
                 setContent(data.data);
-                console.log(data);
             } else {
                 toast.error(data.message);
             }
         } catch (error) {
-            toast.error(error.message);
+            const errorMessage =
+                error.response?.data?.message ||
+                error.message ||
+                "An error occurred";
+            toast.error(errorMessage);
         }
         setLoading(false);
     };
