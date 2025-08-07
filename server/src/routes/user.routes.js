@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { clerkAuth } from "../middlewares/clerkAuth.middleware";
+import { clerkAuth } from "../middlewares/clerkAuth.middleware.js";
 import {
     getCreations,
     getPublishCreations,
     toggleLike,
-} from "../controllers/user.controller";
+} from "../controllers/user.controller.js";
 
 const router = Router();
 
