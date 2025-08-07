@@ -166,7 +166,7 @@ const generateImage = asyncHandler(async (req, res) => {
         const plan = req.plan;
 
         if (plan !== "premium") {
-            throw new ApiError(403, "Subscribe to Generate Image");
+            throw new ApiError(400, "Subscribe to Generate Image");
         }
 
         if (!prompt || prompt === "") {
