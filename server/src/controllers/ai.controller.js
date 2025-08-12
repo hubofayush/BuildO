@@ -1,14 +1,13 @@
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import OpenAI, { APIError } from "openai";
-import { SQL } from "../db/index.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { clerkClient } from "@clerk/express";
 import axios from "axios";
 import fs from "fs";
-import path from "path";
 import { v2 as Cloudinary } from "cloudinary";
 import pdf from "pdf-parse/lib/pdf-parse.js";
+import { Creations } from "../models/Creations.model.js";
 
 const AI = new OpenAI({
     apiKey: process.env.GEMINI_API_KEY,
@@ -20,7 +19,7 @@ const generateArticle = asyncHandler(async (req, res) => {
     const { prompt, length } = req.body;
     const free_usage = req.free_usage;
     const plan = req.plan;
-    console.log(plan);
+
     if (plan !== "premium" && free_usage >= 10) {
         throw new ApiError(400, "Limit Reached. Upgrade to contunue");
     }
@@ -50,13 +49,24 @@ const generateArticle = asyncHandler(async (req, res) => {
 
     // Save creation to database using parameterized query to prevent SQL injection
 
-    try {
-        await SQL.query(
-            `INSERT INTO creations(user_id, prompt, content, type) VALUES($1, $2, $3, $4)`,
-            [userId, prompt, content, "article"]
-        );
-    } catch (error) {
-        throw new ApiError(400, error.message);
+    // try {
+    //     await SQL.query(
+    //         `INSERT INTO creations(user_id, prompt, content, type) VALUES($1, $2, $3, $4)`,
+    //         [userId, prompt, content, "article"]
+    //     );
+    // } catch (error) {
+    //     throw new ApiError(400, error.message);
+    // }
+
+    const uploadDb = await Creations.create({
+        user_id: userId,
+        prompt: prompt,
+        content: content,
+        type: "article",
+    });
+
+    if (!uploadDb) {
+        throw new ApiError(400, "Cannot upload on db");
     }
 
     if (plan !== "premium") {

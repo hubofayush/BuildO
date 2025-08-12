@@ -9,16 +9,16 @@ import GenerateImages from "./Pages/GenerateImages";
 import ReamoveObject from "./Pages/ReamoveObject";
 import RemoveBackgorund from "./Pages/RemoveBackgorund";
 import ReviewResume from "./Pages/ReviewResume";
-// import { useAuth } from "@clerk/clerk-react";
-// import { useEffect } from "react";
+import { useAuth } from "@clerk/clerk-react";
+import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
-    // const { getToken } = useAuth();
+    const { getToken } = useAuth();
 
-    // useEffect(() => {
-    //     getToken().then((token) => console.log(token));
-    // }, []);
+    useEffect(() => {
+        getToken().then((token) => console.log(token));
+    }, []);
 
     return (
         <>

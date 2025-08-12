@@ -1,4 +1,4 @@
-import { SQL } from "../db/index.js";
+import { Creations } from "../models/Creations.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
@@ -7,8 +7,7 @@ const getCreations = asyncHandler(async (req, res) => {
     try {
         const { userId } = req.auth();
 
-        const creations =
-            await SQL`SELECT * FROM creations WHERE user_id = ${userId} ORDER BY created_at DESC`;
+        const creations = await Creations.find({ user_id: userId });
 
         return res
             .status(200)

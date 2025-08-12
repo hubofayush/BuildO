@@ -22,6 +22,7 @@ const Dashboard = () => {
             });
 
             if (data.success) {
+                console.log(creations);
                 setCreations(data.data);
             } else {
                 toast.error(data.message);
@@ -79,7 +80,7 @@ const Dashboard = () => {
                 <div className="space-y-3">
                     <p className="mt-6 mb-4">Recent Creations</p>
                     {creations.map((item) => (
-                        <CreationItem key={item.id} item={item} />
+                        <CreationItem key={item._id} item={item} />
                     ))}
                 </div>
             )}
