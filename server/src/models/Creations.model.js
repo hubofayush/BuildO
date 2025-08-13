@@ -22,7 +22,11 @@ const creationsShema = new Schema(
             type: Boolean,
             default: false,
         },
-        likes: [{ type: String, default: {} }],
+        // likes count in number
+        like_count: {
+            type: Number,
+            default: 0,
+        },
     },
     { timestamps: true }
 );

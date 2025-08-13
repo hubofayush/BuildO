@@ -15,15 +15,15 @@ const Dashboard = () => {
     const { getToken } = useAuth();
     const getCreations = async () => {
         try {
-            const { data } = await axios.get("/user/get-user-creations", {
+            const { data } = await axios.get("user/get-user-creations", {
                 headers: {
                     Authorization: `Bearer ${await getToken()}`,
                 },
             });
 
             if (data.success) {
-                console.log(creations);
                 setCreations(data.data);
+                // console.log(creations);
             } else {
                 toast.error(data.message);
             }
