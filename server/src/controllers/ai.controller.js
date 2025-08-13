@@ -122,16 +122,27 @@ const generateBlogTitle = asyncHandler(async (req, res) => {
 
         const content = response.choices?.[0]?.message?.content;
 
-        try {
-            await SQL.query(
-                `INSERT INTO creations(user_id, prompt, content, type) VALUES($1, $2, $3, $4)`,
-                [userId, prompt, content, "blog-title"]
-            );
-        } catch (error) {
-            throw new ApiError(
-                401,
-                `Error while uploding data on DB: ${error}`
-            );
+        // try {
+        //     await SQL.query(
+        //         `INSERT INTO creations(user_id, prompt, content, type) VALUES($1, $2, $3, $4)`,
+        //         [userId, prompt, content, "blog-title"]
+        //     );
+        // } catch (error) {
+        //     throw new ApiError(
+        //         401,
+        //         `Error while uploding data on DB: ${error}`
+        //     );
+        // }
+
+        const uploadDB = await Creations.create({
+            user_id: userId,
+            prompt: prompt,
+            type: "blog-title",
+            content: content,
+        });
+
+        if (!uploadDB) {
+            throw new ApiError(400, "Not upload on DB");
         }
 
         if (plan !== "premium") {
@@ -211,12 +222,20 @@ const generateImage = asyncHandler(async (req, res) => {
             );
         }
 
-        const dbQuery = await SQL.query(
-            `INSERT INTO creations(user_id, prompt, content, type, publish) VALUES($1, $2, $3, $4, $5)`,
-            [userId, prompt, uploadImage.secure_url, "image", publish ?? false]
-        );
+        // const dbQuery = await SQL.query(
+        //     `INSERT INTO creations(user_id, prompt, content, type, publish) VALUES($1, $2, $3, $4, $5)`,
+        //     [userId, prompt, uploadImage.secure_url, "image", publish ?? false]
+        // );
 
-        if (!dbQuery) {
+        const uploadDB = await Creations.create({
+            user_id: userId,
+            prompt: prompt,
+            content: uploadImage.secure_url,
+            type: "image",
+            publish: publish ?? false,
+        });
+
+        if (!uploadDB) {
             throw new ApiError(400, "DB query not worked");
         }
 
@@ -274,16 +293,24 @@ const removeBackground = asyncHandler(async (req, res) => {
         }
         // await fs.promises.unlink(image.path).catch(() => {});
 
-        const dbQuery = await SQL.query(
-            `INSERT INTO creations(user_id,prompt,content,type) VALUES($1, $2, $3, $4)`,
-            [
-                userId,
-                "Remove backgrund of image",
-                uploadImage.secure_url,
-                "image",
-            ]
-        );
-        if (!dbQuery) {
+        // const dbQuery = await SQL.query(
+        //     `INSERT INTO creations(user_id,prompt,content,type) VALUES($1, $2, $3, $4)`,
+        //     [
+        //         userId,
+        //         "Remove backgrund of image",
+        //         uploadImage.secure_url,
+        //         "image",
+        //     ]
+        // );
+
+        const uploadDB = await Creations.create({
+            user_id: userId,
+            prompt: "Remove Background of Image",
+            content: uploadImage.secure_url,
+            type: "image",
+        });
+
+        if (!uploadDB) {
             throw new ApiError(400, "db query failed");
         }
 
@@ -340,12 +367,19 @@ const removeObject = asyncHandler(async (req, res) => {
             throw new ApiError(400, "Error while Oject removing");
         }
 
-        const dbQuery = await SQL.query(
-            `INSERT INTO creations(user_id,prompt,content,type) VALUES($1, $2, $3, $4)`,
-            [userId, `Removed ${object} from image`, imageUrl, "image"]
-        );
+        // const dbQuery = await SQL.query(
+        //     `INSERT INTO creations(user_id,prompt,content,type) VALUES($1, $2, $3, $4)`,
+        //     [userId, `Removed ${object} from image`, imageUrl, "image"]
+        // );
 
-        if (!dbQuery) {
+        const uploadDB = await Creations.create({
+            user_id: userId,
+            prompt: `Removed ${object}`,
+            type: "image",
+            content: imageUrl,
+        });
+
+        if (!uploadDB) {
             throw new ApiError(400, "DB query failed");
         }
 
@@ -405,11 +439,19 @@ const reviewResume = asyncHandler(async (req, res) => {
 
         const content = response.choices?.[0]?.message?.content;
 
-        const dbQuery = await SQL.query(
-            `INSERT INTO creations(user_id,prompt,content,type) VALUES($1,$2,$3,$4)`,
-            [userId, "Review Resume", content, "resume-review"]
-        );
-        if (!dbQuery) {
+        // const dbQuery = await SQL.query(
+        //     `INSERT INTO creations(user_id,prompt,content,type) VALUES($1,$2,$3,$4)`,
+        //     [userId, "Review Resume", content, "resume-review"]
+        // );
+
+        const uploadDB = await Creations.create({
+            user_id: userId,
+            prompt: "Review Resume",
+            content: content,
+            type: "resume-review",
+        });
+
+        if (!uploadDB) {
             throw new ApiError(400, "DB query failed");
         }
 
