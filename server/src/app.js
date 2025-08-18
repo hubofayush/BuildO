@@ -23,7 +23,7 @@ app.use(cookieparser()); // Parse cookies from incoming requests
 app.use(clerkMiddleware()); // Clerk authentication middleware for all routes
 // Health check route
 
-app.get("/ai", (req, res) => {
+app.get("/", (req, res) => {
     return res.send("hello form buildo");
 });
 app.use(requireAuth()); // Require authentication for all subsequent routes
