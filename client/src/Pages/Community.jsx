@@ -17,11 +17,10 @@ const Community = () => {
 
     const fetchCreations = async () => {
         try {
-            setLoading(true);
-            const token = await getToken();
+            // const token = await getToken();
             // console.log("Fetching creations with token:", token); // Debug
             const { data } = await axios.get("user/get-publish-creations", {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { Authorization: `Bearer ${await getToken()}` },
             });
 
             if (data.success) {
@@ -31,11 +30,11 @@ const Community = () => {
                 toast.error(data.message || "Failed to fetch creations");
             }
         } catch (error) {
-            toast.error(
+            const errorMessage =
                 error.response?.data?.message ||
-                    error.message ||
-                    "Failed to fetch creations"
-            );
+                error.message ||
+                "An error occurred";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -45,11 +44,11 @@ const Community = () => {
         if (!user || !creationIds.length) return;
 
         try {
-            const token = await getToken();
+            // const token = await getToken();
             // console.log("Fetching likes with token:", token); // Debug
             const promises = creationIds.map(async (id) => {
                 const { data } = await axios.get(`user/get-likers/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: { Authorization: `Bearer ${await getToken()}` },
                 });
                 if (data.success) {
                     const userLiked = data.data.some(
@@ -99,12 +98,12 @@ const Community = () => {
         }));
 
         try {
-            const token = await getToken();
+            // const token = await getToken();
             // console.log("Toggling like with token:", token); // Debug
             const { data } = await axios.post(
                 "user/toggle-like-creation",
                 { id: creationId },
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${await getToken()}` } }
             );
 
             if (data.success) {
@@ -139,7 +138,7 @@ const Community = () => {
         if (user) {
             fetchCreations();
         }
-    }, []);
+    }, [user]);
 
     const SkeletonCard = () => (
         <div className="relative inline-block pl-3 pt-3 w-full sm:max-w-1/2 lg:max-w-1/3">
@@ -189,16 +188,18 @@ const Community = () => {
                                                     )
                                                 }
                                                 className={`min-w-5 h-5 hover:scale-110 cursor-pointer
-                 ${
-                     userLikes[creation._id]
-                         ? "fill-red-500 text-red-600"
-                         : "text-white"
-                 }
-                                                ${
-                                                    likeLoading[creation._id]
-                                                        ? "opacity-50 cursor-not-allowed"
-                                                        : ""
-                                                }
+                                                    ${
+                                                        userLikes[creation._id]
+                                                            ? "fill-red-500 text-red-600"
+                                                            : "text-white"
+                                                    }
+                                                    ${
+                                                        likeLoading[
+                                                            creation._id
+                                                        ]
+                                                            ? "opacity-50 cursor-not-allowed"
+                                                            : ""
+                                                    }
                  `}
                                             />
                                         </div>

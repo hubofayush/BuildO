@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Gem, Sparkles } from "lucide-react";
 import { Protect, useAuth } from "@clerk/clerk-react";
 import CreationItem from "../Components/CreationItem";
@@ -15,7 +15,7 @@ const Dashboard = () => {
     const { getToken } = useAuth();
     const getCreations = async () => {
         try {
-            const { data } = await axios.get("user/get-user-creations", {
+            const { data } = await axios.get("/user/get-user-creations", {
                 headers: {
                     Authorization: `Bearer ${await getToken()}`,
                 },
