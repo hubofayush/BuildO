@@ -5,6 +5,7 @@ import { clerkMiddleware, requireAuth } from "@clerk/express";
 import { connectCloudinary } from "./utils/cloudinary.js";
 import aiRouter from "./routes/ai.routes.js";
 import userRouter from "./routes/user.routes.js";
+import logger from "./utils/logger.js";
 const app = express();
 
 await connectCloudinary();
@@ -29,5 +30,14 @@ app.get("/", (req, res) => {
 app.use(requireAuth()); // Require authentication for all subsequent routes
 app.use("/api/v1/ai", aiRouter);
 app.use("/api/v1/user", userRouter);
+
+// Global error handler
+app.use((err, req, res, next) => {
+    logger.error(`Unhandled error: ${err.message}`, {
+        stack: err.stack,
+        path: req.path,
+    });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+});
 
 export { app };

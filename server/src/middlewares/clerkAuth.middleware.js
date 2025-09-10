@@ -1,4 +1,5 @@
 import { clerkClient } from "@clerk/express";
+import logger from "../utils/logger.js";
 
 // Middleware to check user plan and set free usage
 export const clerkAuth = async (req, res, next) => {
@@ -27,9 +28,13 @@ export const clerkAuth = async (req, res, next) => {
 
         // Set plan type on request
         req.plan = hasPremiumPlan ? "premium" : "free";
+        logger.info(`User authenticated`, { userId, plan: req.plan }); // Info log
         next();
     } catch (error) {
         // Consider logging error for production
+        logger.error(`ClerkAuth error: ${error.message}`, {
+            stack: error.stack,
+        });
         console.error("ClerkAuth middleware error:", error);
         res.status(500).json({
             success: false,

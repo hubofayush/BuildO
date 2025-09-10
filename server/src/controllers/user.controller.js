@@ -4,6 +4,7 @@ import { Like } from "../models/Like.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
+import logger from "../utils/logger.js";
 
 const getCreations = asyncHandler(async (req, res) => {
     try {
@@ -157,7 +158,11 @@ const toggleLike = asyncHandler(async (req, res) => {
         session.endSession();
 
         const updatedCreation = await Creations.findById(id);
-
+        logger.audit(`User toggled like on creation`, {
+            userId,
+            creationId: id,
+            action: message,
+        });
         return res
             .status(200)
             .json(
@@ -168,6 +173,10 @@ const toggleLike = asyncHandler(async (req, res) => {
                 )
             );
     } catch (error) {
+        logger.error(`Error toggling like: ${error.message}`, {
+            stack: error.stack,
+            userId: req.auth().userId,
+        });
         await session.abortTransaction();
         session.endSession();
         console.error("Toggle like error:", error);
