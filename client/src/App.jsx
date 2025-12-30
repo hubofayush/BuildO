@@ -12,8 +12,20 @@ import ReviewResume from "./Pages/ReviewResume";
 // import { useAuth } from "@clerk/clerk-react";
 // import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
+import { getGTM } from "./lib/gtm";
 
 const App = () => {
+    useEffect(() => {
+        getGTM().then((gtm) =>
+            gtm.dataLayer({
+                dataLayer: {
+                    event: "Google Analytics GA4 Event",
+                },
+            })
+        );
+    }, []);
+
     // const { getToken } = useAuth();
 
     // useEffect(() => {
